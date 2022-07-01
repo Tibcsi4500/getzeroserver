@@ -61,26 +61,44 @@ def check():
             return str(e)
         return "Something went wrong"
 
-@app.route('/appl/', methods = ['GET', 'POST'])
-def appl():
+@app.route('/modelsearch/', methods = ['GET', 'POST'])
+def modelsearch():
     if (request.method == 'GET'):
-        modelid = "WM14URHSPL"
-        index = "washingEfficiencyIndexV2"
+        return 'Get'
     elif (request.method == 'POST'):
-        modelid = request.form['prod']
-        index = request.form['password']
-    url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019?_page=1&_limit=25&sort0=onMarketStartDateTS&order0=DESC&sort1=energyClass&order1=DESC'
-    result = requests.get(url)
+        data = request.form
+        modelid = data['modelid']
+        url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019?_page=1&_limit=25&sort0=onMarketStartDateTS&order0=DESC&sort1=energyClass&order1=DESC'
+        result = requests.get(url)
 
-    data_json = json.loads(result.text)
+        data_json = json.loads(result.text)
 
-    try:
-        for hit in data_json['hits']:
-            if(hit['modelIdentifier'] == modelid):
-                return str(hit[index])
-        return "Failed"
-    except:
-        return "Failed"
+        try:
+            for hit in data_json['hits']:
+                if(hit['modelIdentifier'] == modelid):
+                    return str(hit)
+            return "Failed"
+        except:
+            return "Failed"
+# def appl():
+#     if (request.method == 'GET'):
+#         modelid = "WM14URHSPL"
+#         index = "washingEfficiencyIndexV2"
+#     elif (request.method == 'POST'):
+#         modelid = request.form['prod'] #WM14URHSPL
+#         index = request.form['password'] # washingEfficiencyIndexV2
+#     url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019?_page=1&_limit=25&sort0=onMarketStartDateTS&order0=DESC&sort1=energyClass&order1=DESC'
+#     result = requests.get(url)
+
+#     data_json = json.loads(result.text)
+
+#     try:
+#         for hit in data_json['hits']:
+#             if(hit['modelIdentifier'] == modelid):
+#                 return str(hit[index])
+#         return "Failed"
+#     except:
+#         return "Failed"
 
 if __name__ == '__main__':
     server_port = os.environ.get('PORT', '8080')
