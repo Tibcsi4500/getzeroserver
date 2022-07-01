@@ -9,7 +9,7 @@ import requests
 
 app = Flask(__name__)
 connector = Connector()
-#asd
+#asdasd
 def getconn() -> pymysql.connections.Connection:
     conn: pymysql.connections.Connection = connector.connect(
         "turnkey-banner-354610:europe-west6:example",
