@@ -79,8 +79,8 @@ def modelsearch():
         for hit in data_json['hits']:
             if(hit['modelIdentifier'] == modelid):
                 eprelRegistrationNumber = hit['eprelRegistrationNumber']
-        
         url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019/' + eprelRegistrationNumber +'/labels?format=PDF'
+        return url
         if(requests.head(url).status_code == 200):
             return url
         else:
