@@ -70,21 +70,23 @@ def modelsearch():
         data = request.form
         modelid = data['modelid']
     
-    #url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019?_page=1&_limit=25&sort0=onMarketStartDateTS&order0=DESC&sort1=energyClass&order1=DESC'
-    url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019?_page=1&_limit=10&modelIdentifier=' + modelid
+    url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019?_page=1&_limit=25&sort0=onMarketStartDateTS&order0=DESC&sort1=energyClass&order1=DESC'
     result = requests.get(url)
     data_json = json.loads(result.text)
-    #eprelRegNumber = 0
+    eprelRegistrationNumber = 0
 
-    return data_json
-
-    # try:
-    #     for hit in data_json['hits']:
-    #         if(hit['modelIdentifier'] == modelid):
-    #             return str(hit[])
-    #     return "Failed"
-    # except:
-    #     return "Failed"
+    try:
+        for hit in data_json['hits']:
+            if(hit['modelIdentifier'] == modelid):
+                eprelRegistrationNumber = hit['eprelRegistrationNumber']
+        
+        url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019/' + eprelRegistrationNumber +'/labels?format=PDF'
+        if(requests.head(url).status_code == 200):
+            return url
+        else:
+            return "Failed"        
+    except:
+        return "Failed"
 # def appl():
 #     if (request.method == 'GET'):
 #         modelid = "WM14URHSPL"
