@@ -61,6 +61,7 @@ def check():
             return str(e)
         return "Something went wrong"
 
+#This function is for looking up models
 @app.route('/modelsearch/', methods = ['GET', 'POST'])
 def modelsearch():
     if (request.method == 'GET'):
@@ -68,18 +69,19 @@ def modelsearch():
     elif (request.method == 'POST'):
         data = request.form
         modelid = data['modelid']
-        url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019?_page=1&_limit=25&sort0=onMarketStartDateTS&order0=DESC&sort1=energyClass&order1=DESC'
-        result = requests.get(url)
+    
+    url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019?_page=1&_limit=25&sort0=onMarketStartDateTS&order0=DESC&sort1=energyClass&order1=DESC'
+    result = requests.get(url)
 
-        data_json = json.loads(result.text)
+    data_json = json.loads(result.text)
 
-        try:
-            for hit in data_json['hits']:
-                if(hit['modelIdentifier'] == modelid):
-                    return str(hit)
-            return "Failed"
-        except:
-            return "Failed"
+    try:
+        for hit in data_json['hits']:
+            if(hit['modelIdentifier'] == modelid):
+                return str(hit)
+        return "Failed"
+    except:
+        return "Failed"
 # def appl():
 #     if (request.method == 'GET'):
 #         modelid = "WM14URHSPL"
