@@ -86,7 +86,7 @@ def modelsearch():
         else:
             return "Failed"        
     except:
-        return "Failed"
+        return "Except"
 # def appl():
 #     if (request.method == 'GET'):
 #         modelid = "WM14URHSPL"
