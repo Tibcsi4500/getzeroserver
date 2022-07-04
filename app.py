@@ -54,7 +54,7 @@ def check():
                 SQL = sqlalchemy.text("SELECT 1 AS truth FROM users WHERE users.name = :name AND users.password = :password;")
                 is_user = db_conn.execute(SQL, name = name, password = password)
 
-                for row in is_user:
+                for _ in is_user:
                     return "1"
                 return "0"
         except Exception as e:
