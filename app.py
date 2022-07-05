@@ -28,6 +28,13 @@ def getpool():
     )
     return pool
 
+def getBody():
+    if (request.method == 'GET'):
+        return request.args
+    elif (request.method == 'POST'):
+        return request.form
+    return {}
+
 @app.route('/')
 def hello():
     pool = getpool()
@@ -40,35 +47,32 @@ def hello():
 
 @app.route('/check_user/', methods = ['GET', 'POST'])
 def check():
-    if (request.method == 'GET'):
-        return 'Get'
-    elif (request.method == 'POST'):
-        data = request.form
+    data = getBody()
 
-        try:
-            name = data['name']
-            password = data['password']
+    try:
+        name = data['name']
+        password = data['password']
 
-            pool = getpool()
-            with pool.connect() as db_conn:
-                SQL = sqlalchemy.text("SELECT 1 AS truth FROM users WHERE users.name = :name AND users.password = :password;")
-                is_user = db_conn.execute(SQL, name = name, password = password)
+        pool = getpool()
+        with pool.connect() as db_conn:
+            SQL = sqlalchemy.text("SELECT 1 AS truth FROM users WHERE users.username = :name AND users.password = :password;")
+            is_user = db_conn.execute(SQL, name = name, password = password)
 
-                for _ in is_user:
-                    return "1"
-                return "0"
-        except Exception as e:
-            return str(e)
+            for _ in is_user:
+                return "1"
+            return "0"
+    except Exception as e:
         return "Something went wrong"
+    return "Something went wrong"
 
 #This function is for looking up models
 @app.route('/modelsearch/', methods = ['GET', 'POST'])
 def modelsearch():
-    if (request.method == 'GET'):
-        return 'Get'
-    elif (request.method == 'POST'):
-        data = request.form
+    data = getBody()
+    try:
         modelid = data['modelid']
+    except:
+        return "Something went wrong"
     
     url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019?_page=1&_limit=25&sort0=onMarketStartDateTS&order0=DESC&sort1=energyClass&order1=DESC'
     result = requests.get(url)
@@ -84,9 +88,9 @@ def modelsearch():
         if(requests.head(url).status_code == 200):
             return url
         else:
-            return "Failed"        
+            return "Something went wrong"
     except:
-        return "Except"
+        return "Something went wrong"
 # def appl():
 #     if (request.method == 'GET'):
 #         modelid = "WM14URHSPL"
