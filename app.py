@@ -30,13 +30,13 @@ def modelsearch():
         modelid = data['modelid']
     except:
         return "Something went wrong"
-    
-    url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019?_page=1&_limit=25&sort0=onMarketStartDateTS&order0=DESC&sort1=energyClass&order1=DESC'
-    result = requests.get(url)
-    data_json = json.loads(result.text)
-    eprelRegistrationNumber = 0
 
     try:
+        url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019?_page=1&_limit=25&sort0=onMarketStartDateTS&order0=DESC&sort1=energyClass&order1=DESC'
+        result = requests.get(url)
+        data_json = json.loads(result.text)
+        eprelRegistrationNumber = 0
+        
         for hit in data_json['hits']:
             if(hit['modelIdentifier'] == modelid):
                 eprelRegistrationNumber = str(hit['eprelRegistrationNumber'])
