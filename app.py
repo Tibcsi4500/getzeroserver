@@ -45,9 +45,9 @@ def modelsearch():
         if(requests.head(url).status_code == 200):
             return url
         else:
-            return "Something went wrong"
+            return "Url not valid"
     except:
-        return "Something went wrong"
+        return "Exception thrown"
 
 @app.route('/checkUser/', methods = ['GET', 'POST'])
 def checkUser():
