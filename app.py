@@ -40,7 +40,7 @@ def modelsearch():
         
         for hit in data_json['hits']:
             if(hit['modelIdentifier'] == modelid):
-                return hit
+                return str(hit)
             else:
                 return 0
 
