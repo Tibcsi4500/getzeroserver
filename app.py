@@ -32,12 +32,10 @@ def modelsearch():
         return "Something went wrong"
 
     try:
-        url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019?_page=1&_limit=25&sort0=onMarketStartDateTS&order0=DESC&sort1=energyClass&order1=DESC'
-        result = requests.get(url)
-
-        return result.text
-
-        data_json = json.loads(result.text)
+        json_file_path = "./ApplianceJSON/washingmachine.json"
+        with open(json_file_path, 'r') as j:
+            data_json = json.loads(j.read())
+        
         eprelRegistrationNumber = 0
         
         for hit in data_json['hits']:
