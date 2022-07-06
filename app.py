@@ -7,37 +7,14 @@ import urllib.request
 import json
 import requests  
 
+import databaseCalls as db
+import util
+
 app = Flask(__name__)
-connector = Connector()
-#asdasd
-#here is another comment
-def getconn() -> pymysql.connections.Connection:
-    conn: pymysql.connections.Connection = connector.connect(
-        "turnkey-banner-354610:europe-west6:example",
-        "pymysql",
-        user="root",
-        password="root",
-        db="getzero"
-    )
-    return conn
-
-def getpool():
-    pool = sqlalchemy.create_engine(
-        "mysql+pymysql://",
-        creator=getconn,
-    )
-    return pool
-
-def getBody():
-    if (request.method == 'GET'):
-        return request.args
-    elif (request.method == 'POST'):
-        return request.form
-    return {}
 
 @app.route('/')
 def hello():
-    pool = getpool()
+    pool = util.getpool()
     with pool.connect() as db_conn:
         entries = db_conn.execute("SELECT * from users;").fetchall()
     result = ""
@@ -45,30 +22,10 @@ def hello():
         result += str(row) + "<br>"
     return "<html>" + result + "</html>"
 
-@app.route('/check_user/', methods = ['GET', 'POST'])
-def check():
-    data = getBody()
-
-    try:
-        name = data['name']
-        password = data['password']
-
-        pool = getpool()
-        with pool.connect() as db_conn:
-            SQL = sqlalchemy.text("SELECT 1 AS truth FROM users WHERE users.username = :name AND users.password = :password;")
-            is_user = db_conn.execute(SQL, name = name, password = password)
-
-            for _ in is_user:
-                return "1"
-            return "0"
-    except Exception as e:
-        return "Something went wrong"
-    return "Something went wrong"
-
 #This function is for looking up models
 @app.route('/modelsearch/', methods = ['GET', 'POST'])
 def modelsearch():
-    data = getBody()
+    data = util.getBody()
     try:
         modelid = data['modelid']
     except:
@@ -91,28 +48,11 @@ def modelsearch():
             return "Something went wrong"
     except:
         return "Something went wrong"
-# def appl():
-#     if (request.method == 'GET'):
-#         modelid = "WM14URHSPL"
-#         index = "washingEfficiencyIndexV2"
-#     elif (request.method == 'POST'):
-#         modelid = request.form['prod'] #WM14URHSPL
-#         index = request.form['password'] # washingEfficiencyIndexV2
-#     url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019?_page=1&_limit=25&sort0=onMarketStartDateTS&order0=DESC&sort1=energyClass&order1=DESC'
-#     result = requests.get(url)
 
-#     data_json = json.loads(result.text)
-
-#     try:
-#         for hit in data_json['hits']:
-#             if(hit['modelIdentifier'] == modelid):
-#                 return str(hit[index])
-#         return "Failed"
-#     except:
-#         return "Failed"
+@app.route('/check_user/', methods = ['GET', 'POST'])
+def check():
+    return db.check()
 
 if __name__ == '__main__':
     server_port = os.environ.get('PORT', '8080')
     app.run(debug=False, port=server_port, host='0.0.0.0')
-
-#THIS COMMENT WAS MADE BY JACK
