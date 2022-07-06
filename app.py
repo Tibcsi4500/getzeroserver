@@ -46,10 +46,8 @@ def modelsearch():
             return url
         else:
             return "Url not valid"
-    except Exception as e:
-        return "Exception thrown: \n" + e
     except:
-        return "o.O"
+        return "Exception thrown"
 
 @app.route('/checkUser/', methods = ['GET', 'POST'])
 def checkUser():
