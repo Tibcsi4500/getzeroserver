@@ -40,14 +40,14 @@ def modelsearch():
         for hit in data_json['hits']:
             if(hit['modelIdentifier'] == modelid):
                 eprelRegistrationNumber = str(hit['eprelRegistrationNumber'])
-        url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019/' + eprelRegistrationNumber +'/labels?format=PDF'
+        url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019/' + str(eprelRegistrationNumber) +'/labels?format=PDF'
         
         if(requests.head(url).status_code == 200):
             return url
         else:
             return "Url not valid"
-    except:
-        return "Exception thrown"
+    except Exception as e:
+        return "Exception thrown: " + str(e)
 
 @app.route('/checkUser/', methods = ['GET', 'POST'])
 def checkUser():
