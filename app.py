@@ -22,7 +22,7 @@ def hello():
         result += str(row) + "<br>"
     return "<html>" + result + "</html>"
 
-#This function is for looking up models
+#This function is for looking up models - yes it is
 @app.route('/modelsearch/', methods = ['GET', 'POST'])
 def modelsearch():
     data = util.getBody()
