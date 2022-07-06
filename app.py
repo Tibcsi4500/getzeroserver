@@ -49,9 +49,13 @@ def modelsearch():
     except:
         return "Something went wrong"
 
-@app.route('/check_user/', methods = ['GET', 'POST'])
-def check():
-    return db.check()
+@app.route('/checkUser/', methods = ['GET', 'POST'])
+def checkUser():
+    return db.checkUser()
+
+@app.route('/getChallenge/', methods = ['GET', 'POST'])
+def getChallenge():
+    return db.getChallenge()
 
 if __name__ == '__main__':
     server_port = os.environ.get('PORT', '8080')
