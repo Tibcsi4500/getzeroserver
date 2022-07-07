@@ -35,20 +35,17 @@ def modelsearch():
         json_file_path = "./ApplianceJSON/washingmachine.json"
         with open(json_file_path, 'r') as j:
             data_json = json.loads(j.read())
-        
-        eprelRegistrationNumber = 0
+
         model = {}
         
         for hit in data_json['hits']:
             if(hit['modelIdentifier'] == modelid):
                 model = hit
-                # eprelRegistrationNumber = str(hit['eprelRegistrationNumber'])
-        url = 'https://eprel.ec.europa.eu/api/products/washingmachines2019/' + str(eprelRegistrationNumber) +'/labels?format=PDF'
         
-        if(requests.head(url).status_code == 200):
+        if model != {}:
             return model
         else:
-            return "Url not valid"
+            return ""
     except Exception as e:
         return "Exception thrown: " + str(e)
 
