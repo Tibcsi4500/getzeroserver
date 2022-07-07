@@ -53,9 +53,21 @@ def modelsearch():
 def checkUser():
     return db.checkUser()
 
-@app.route('/getChallenge/', methods = ['GET', 'POST'])
-def getChallenge():
-    return db.getChallenge()
+@app.route('/getAcceptedChallengesOfUser/', methods = ['GET', 'POST'])
+def getAcceptedChallengesOfUser():
+    return db.getAcceptedChallengesOfUser()
+
+@app.route('/incrementChallengeProgress/', methods = ['GET', 'POST'])
+def incrementChallengeProgress():
+    return db.incrementChallengeProgress()
+
+@app.route('/getUnacceptedChallengesOfUser/', methods = ['GET', 'POST'])
+def getUnacceptedChallengesOfUser():
+    return db.getUnacceptedChallengesOfUser()
+
+@app.route('/acceptChallengesOfUser/', methods = ['GET', 'POST'])
+def acceptChallengesOfUser():
+    return db.acceptChallengesOfUser()
 
 if __name__ == '__main__':
     server_port = os.environ.get('PORT', '8080')

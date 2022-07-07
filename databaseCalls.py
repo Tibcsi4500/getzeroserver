@@ -27,19 +27,81 @@ def checkUser():
         return "Something went wrong"
     return "Something went wrong"
 
-def getChallenge():
+def getAcceptedChallengesOfUser():
+    data = util.getBody()
+    try:
+        user = data['userid']
+        pool = util.getpool()
+        with pool.connect() as db_conn:
+            SQL = sqlalchemy.text(
+                "SELECT challenges.challengeid as challengeid, challenges.title as title, ucr.progress as progress FROM challenges, userchallengerelation as ucr " + 
+                "WHERE ucr.challengeid = challenges.challengeid AND " +
+                "ucr.userid = :user AND ucr.finished = 0;"
+                )
+            challenges = db_conn.execute(SQL, user = user)
+            res = ""
+            for row in challenges:
+                res += str(row['challengeid']) + ";" + str(row['title']) + ";" + str(row['progress']) + "\n"
+            return res
+    except Exception as e:
+        return "Exception: " + str(e)
+    return "Something went wrong"
+
+def incrementChallengeProgress():
     data = util.getBody()
     try:
         user = data['userid']
         challenge = data['challengeid']
         pool = util.getpool()
         with pool.connect() as db_conn:
-            SQL = sqlalchemy.text("SELECT * FROM challenges WHERE user_id = :user AND challenge_id = :challenge;")
-            challenges = db_conn.execute(SQL, user = user, challenge = challenge)
+            SQL = sqlalchemy.text(
+                "UPDATE userchallengerelation " + 
+                "SET progress = progress + 1 " +
+                "WHERE userid = :user AND challengeid = :challenge;"
+                )
+            db_conn.execute(SQL, user = user, challenge = challenge)
+
+            return "1"
+    except Exception as e:
+        return "Exception: " + str(e)
+    return "Something went wrong"
+
+def getUnacceptedChallengesOfUser():
+    data = util.getBody()
+    try:
+        user = data['userid']
+        pool = util.getpool()
+        with pool.connect() as db_conn:
+            SQL = sqlalchemy.text(
+                "SELECT challenges.challengeid as challengeid, challenges.title as title, challenges.description as description FROM challenges " + 
+                "WHERE challengeid NOT IN (SELECT challengeid FROM userchallengerelation WHERE userid = :user) ;"
+                )
+            challenges = db_conn.execute(SQL, user = user)
             res = ""
             for row in challenges:
-                res += str(row)
+                res += str(row['challengeid']) + ";" + str(row['title']) + ";" + str(row['description']) + "\n"
             return res
     except Exception as e:
-        return "Something went wrong"
+        return "Exception: " + str(e)
+    return "Something went wrong"
+
+def acceptChallengesOfUser():
+    data = util.getBody()
+    try:
+        user = data['userid']
+        challenges = data['challenges']
+
+        challengelist = challenges.split("-")
+
+        pool = util.getpool()
+        with pool.connect() as db_conn:
+            for challenge in challengelist:
+                SQL = sqlalchemy.text(
+                    "INSERT INTO userchallengerelation (userid, challengeid) " +
+                    "VALUES (:user , :challenge ) ;"
+                    )
+                db_conn.execute(SQL, user = user, challenge = challenge)
+            return "1"
+    except Exception as e:
+        return "Exception: " + str(e)
     return "Something went wrong"
