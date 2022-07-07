@@ -27,7 +27,7 @@ def hello():
 def modelsearch():
     data = util.getBody()
     try:
-        modelid = data['modelid']
+        modelid = data['modelIdentifier']
     except:
         return "Something went wrong"
 
