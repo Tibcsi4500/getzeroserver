@@ -37,7 +37,7 @@ def modelsearch():
             data_json = json.loads(j.read())
         
         eprelRegistrationNumber = 0
-        model = data_json['hits'][0]
+        model = {}
         
         for hit in data_json['hits']:
             if(hit['modelIdentifier'] == modelid):
