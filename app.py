@@ -1,8 +1,8 @@
 import os
 from flask import Flask, render_template, request
-from google.cloud.sql.connector import Connector
-import sqlalchemy
-import pymysql
+#from google.cloud.sql.connector import Connector
+#import sqlalchemy
+#import pymysql
 import urllib.request
 import json
 import requests  
@@ -12,15 +12,20 @@ import util
 
 app = Flask(__name__)
 
+# @app.route('/')
+# def hello():
+#     pool = util.getpool()
+#     with pool.connect() as db_conn:
+#        entries = db_conn.execute("SELECT * from users;").fetchall()
+#    result = ""
+#    for row in entries:
+#        result += str(row) + "<br>"
+#    return "<html>" + result + "</html>"
+
 @app.route('/')
 def hello():
-    pool = util.getpool()
-    with pool.connect() as db_conn:
-        entries = db_conn.execute("SELECT * from users;").fetchall()
-    result = ""
-    for row in entries:
-        result += str(row) + "<br>"
-    return "<html>" + result + "</html>"
+	return "Hi!"
+
 
 #This function is for looking up models - yes it is
 @app.route('/modelsearch/', methods = ['GET', 'POST'])
@@ -45,7 +50,7 @@ def modelsearch():
         if model != {}:
             return model
         else:
-            return ""
+            return str(len(data_json['hits']))
     except Exception as e:
         return "Exception thrown: " + str(e)
 
@@ -70,5 +75,5 @@ def acceptChallengesOfUser():
     return db.acceptChallengesOfUser()
 
 if __name__ == '__main__':
-    server_port = os.environ.get('PORT', '8080')
+    server_port = os.environ.get('PORT', '4050')
     app.run(debug=False, port=server_port, host='0.0.0.0')
