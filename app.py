@@ -7,8 +7,15 @@ import urllib.request
 import json
 import requests  
 
-import databaseCalls as db
+#import databaseCalls as db
+import placeholderCalls as db
 import util
+
+from pathlib import Path
+
+import io
+
+from cairosvg import svg2png
 
 app = Flask(__name__)
 
@@ -73,6 +80,43 @@ def getUnacceptedChallengesOfUser():
 @app.route('/acceptChallengesOfUser/', methods = ['GET', 'POST'])
 def acceptChallengesOfUser():
     return db.acceptChallengesOfUser()
+
+@app.route('/lookupid/', methods = ['GET', 'POST'])
+def lookup():
+    data = util.getBody()
+    print(str(data))
+    try:
+        typetext = data['type']
+        modelid = data['modelid']
+        path = Path(str(typetext) + ".json")
+        print(path)
+        jsonfile = open(path)
+        response = jsonfile.read()
+        data = json.loads(response)
+        for hit in data['hits']:
+            if(hit['modelIdentifier'] == str(modelid)):
+                return hit
+        return "Model ID not found"
+    except Exception as e:
+        return "Something went wrong:" + str(e)
+
+
+@app.route('/getimage/', methods = ['GET', 'POST'])
+def getimage():
+    data = util.getBody()
+
+    try:
+        eprelid = data['eprelid']
+        url = 'https://eprel.ec.europa.eu/label/Label_' + str(eprelid) + '.svg'
+        svg = requests.get(url).text
+        filelike = io.StringIO()
+        imgstream = open("temp_img.png", "rb")
+        svg2png(bytestring = svg, write_to = "temp_img.png")
+        b = bytearray(imgstream.read())
+        return bytearray(b)
+    except Exception as e:
+        return "Something went wrong: " + str(e)
+    return "Something went wrong"
 
 if __name__ == '__main__':
     server_port = os.environ.get('PORT', '4050')

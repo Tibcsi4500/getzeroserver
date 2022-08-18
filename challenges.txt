@@ -1,0 +1,16 @@
+{
+  "challenges": [
+    {
+      "title":"Thistitle",
+      "description":"Thisdescription",
+      "challengeid":0,
+      "outof":10
+    },
+    {
+      "title":"Othertitle",
+      "description":"Otherdescription",
+      "challengeid":1,
+      "outof":17
+    }
+  ]
+}

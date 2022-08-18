@@ -31,3 +31,9 @@ def getBody():
     elif (request.method == 'POST'):
         return request.form
     return {}
+
+def contains(key, array):
+    for element in array:
+        if(element == key):
+            return True
+    return False

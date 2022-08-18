@@ -1,0 +1,1 @@
+{"relations": [{"userid": 0, "challengeid": 0, "progress": 8}, {"userid": 1, "challengeid": 0, "progress": 12}, {"userid": 0, "challengeid": 1, "progress": 0}]}
