@@ -4,13 +4,33 @@
       "title":"Thistitle",
       "description":"Thisdescription",
       "challengeid":0,
+      "appliance":"washingmachines2019",
+      "room":"kitchen",
       "outof":10
     },
     {
       "title":"Othertitle",
       "description":"Otherdescription",
       "challengeid":1,
+      "appliance":"washingmachines2019",
+      "room":"kitchen",
       "outof":17
+    },
+    {
+      "title":"Bathroomchallenge",
+      "description":"desc",
+      "challengeid":2,
+      "appliance":"washingmachines2019",
+      "room":"bathroom",
+      "outof":11
+    },
+    {
+      "title":"Ovenchallenge",
+      "description":"desc",
+      "challengeid":3,
+      "appliance":"ovens",
+      "room":"kitchen",
+      "outof":11
     }
   ]
 }

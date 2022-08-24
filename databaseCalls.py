@@ -9,49 +9,34 @@ import requests
 
 import util
 
-#checks whether the given user credentials are valid
-# params: name, password
-def checkUser():
+# Returns the accepted challenges of the user from the mysql db
+# Params: 
+# userid - the identifier of the user
+# !! USES OLD CHALLENGE RETURN FORMAT !!
+def getAcceptedChallengesOfUser():
 	data = util.getBody()
 	try:
-		name = data['name']
-		password = data['password']
+		user = data['userid']
 		pool = util.getpool()
 		with pool.connect() as db_conn:
-			SQL = sqlalchemy.text("SELECT 1 AS truth FROM users WHERE users.username = :name AND users.password = :password;")
-			is_user = db_conn.execute(SQL, name = name, password = password)
-			for _ in is_user:
-				return "1"
-			return "0"
+			SQL = sqlalchemy.text(
+				"SELECT challenges.challengeid as challengeid, challenges.title as title, ucr.progress as progress FROM challenges, userchallengerelation as ucr " + 
+				"WHERE ucr.challengeid = challenges.challengeid AND " +
+				"ucr.userid = :user AND ucr.finished = 0;"
+				)
+			challenges = db_conn.execute(SQL, user = user)
+			res = ""
+			for row in challenges:
+				res += str(row['challengeid']) + ";" + str(row['title']) + ";" + str(row['progress']) + "\n"
+			return res
 	except Exception as e:
-		return "Something went wrong"
+		return "Exception: " + str(e)
 	return "Something went wrong"
 
-# def getAcceptedChallengesOfUser():
-	# data = util.getBody()
-	# try:
-		# user = data['userid']
-		# pool = util.getpool()
-		# with pool.connect() as db_conn:
-			# SQL = sqlalchemy.text(
-				# "SELECT challenges.challengeid as challengeid, challenges.title as title, ucr.progress as progress FROM challenges, userchallengerelation as ucr " + 
-				# "WHERE ucr.challengeid = challenges.challengeid AND " +
-				# "ucr.userid = :user AND ucr.finished = 0;"
-				# )
-			# challenges = db_conn.execute(SQL, user = user)
-			# res = ""
-			# for row in challenges:
-				# res += str(row['challengeid']) + ";" + str(row['title']) + ";" + str(row['progress']) + "\n"
-			# return res
-	# except Exception as e:
-		# return "Exception: " + str(e)
-	# return "Something went wrong"
-
-def getAcceptedChallengesOfUser():
-	res = "Sometitle;Somedescription;1;1;10\n" + "Title2;desc2;2;2;20"
-	return res
-
-
+# Increments a challenge's progress for the user in the mysql db
+# Params: 
+# userid - the identifier of the user
+# challengeid - the identifier of the challenge to be incremented
 def incrementChallengeProgress():
 	data = util.getBody()
 	try:
@@ -74,29 +59,33 @@ def incrementChallengeProgress():
 		return "Exception: " + str(e)
 	return "Something went wrong"
 
-# def getUnacceptedChallengesOfUser():
-	# data = util.getBody()
-	# try:
-		# user = data['userid']
-		# pool = util.getpool()
-		# with pool.connect() as db_conn:
-			# SQL = sqlalchemy.text(
-				# "SELECT challenges.challengeid as challengeid, challenges.title as title, challenges.description as description FROM challenges " + 
-				# "WHERE challengeid NOT IN (SELECT challengeid FROM userchallengerelation WHERE userid = :user) ;"
-				# )
-			# challenges = db_conn.execute(SQL, user = user)
-			# res = ""
-			# for row in challenges:
-				# res += str(row['challengeid']) + ";" + str(row['title']) + ";" + str(row['description']) + "\n"
-			# return res
-	# except Exception as e:
-		# return "Exception: " + str(e)
-	# return "Something went wrong"
-
+# Returns the unaccepted challenges of the user from the mysql db
+# Params: 
+# userid - the identifier of the user
+# !! USES OLD CHALLENGE RETURN FORMAT !!
 def getUnacceptedChallengesOfUser():
-	res = "Sometitle;Somedescription;1;1;10\n" + "Title2;desc2;2;2;20"
-	return res
+	data = util.getBody()
+	try:
+		user = data['userid']
+		pool = util.getpool()
+		with pool.connect() as db_conn:
+			SQL = sqlalchemy.text(
+				"SELECT challenges.challengeid as challengeid, challenges.title as title, challenges.description as description FROM challenges " + 
+				"WHERE challengeid NOT IN (SELECT challengeid FROM userchallengerelation WHERE userid = :user) ;"
+				)
+			challenges = db_conn.execute(SQL, user = user)
+			res = ""
+			for row in challenges:
+				res += str(row['challengeid']) + ";" + str(row['title']) + ";" + str(row['description']) + "\n"
+			return res
+	except Exception as e:
+		return "Exception: " + str(e)
+	return "Something went wrong"
 
+# Accepts the listed challenges for the user in the mysql db
+# Params: 
+# userid - the identifier of the user
+# challenges - the identifiers of the challenges separated by '-'
 def acceptChallengesOfUser():
 	data = util.getBody()
 	try:

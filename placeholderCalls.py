@@ -5,6 +5,14 @@ def getAcceptedChallengesOfUser():
     data = util.getBody()
     try:
         userid = int(data['userid'])
+        if('type' in data):
+            typetext = data['type']
+        else:
+            typetext = 'none'
+        if('room' in data):
+            room = data['room']
+        else:
+            room = 'none'
         relationsFile = open("relations.txt")
         relations = json.loads(relationsFile.read())
         challengesFile = open("challenges.txt")
@@ -13,7 +21,9 @@ def getAcceptedChallengesOfUser():
         for relation in relations['relations']:
             if(relation['userid'] == userid):
                 for challenge in challenges['challenges']:
-                    if(relation['challengeid'] == challenge['challengeid']):
+                    if(relation['challengeid'] == challenge['challengeid']
+                    and (challenge['appliance'] == typetext  or typetext == 'none')
+                    and (challenge['room'] == room or room == 'none')):
                         result += challenge['title'] + ";" 
                         result += challenge['description'] + ";" 
                         result += str(challenge['challengeid']) + ";"
@@ -30,6 +40,14 @@ def getUnacceptedChallengesOfUser():
     data = util.getBody()
     try:
         userid = int(data['userid'])
+        if('type' in data):
+            typetext = data['type']
+        else:
+            typetext = 'none'
+        if('room' in data):
+            room = data['room']
+        else:
+            room = 'none'
         relationsFile = open("relations.txt")
         relations = json.loads(relationsFile.read())
         challengesFile = open("challenges.txt")
@@ -40,7 +58,9 @@ def getUnacceptedChallengesOfUser():
             if(relation['userid'] == userid):
                 acceptedChallenges.append(relation['challengeid'])
         for challenge in challenges['challenges']:
-            if(not util.contains(challenge['challengeid'], acceptedChallenges)):
+            if((not util.contains(challenge['challengeid'], acceptedChallenges))
+            and (challenge['appliance'] == typetext  or typetext == 'none')
+            and (challenge['room'] == room or room == 'none')):
                 result += challenge['title'] + ";" 
                 result += challenge['description'] + ";" 
                 result += str(challenge['challengeid']) + ";"

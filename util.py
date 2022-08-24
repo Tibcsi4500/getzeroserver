@@ -7,6 +7,7 @@ import urllib.request
 import json
 import requests
 
+# Establishes a connection to the specified mysql cloud instance
 def getconn() -> pymysql.connections.Connection:
     connector = Connector()
     conn: pymysql.connections.Connection = connector.connect(
@@ -18,6 +19,7 @@ def getconn() -> pymysql.connections.Connection:
     )
     return conn
 
+# Creates handler for the mysql server
 def getpool():
     pool = sqlalchemy.create_engine(
         "mysql+pymysql://",
@@ -25,13 +27,15 @@ def getpool():
     )
     return pool
 
+# Returns the parameters passed to the web request
 def getBody():
     if (request.method == 'GET'):
-        return request.args
+        return request.args.to_dict()
     elif (request.method == 'POST'):
-        return request.form
+        return request.form.to_dict()
     return {}
 
+# Returns whether the specified key is in the specified array
 def contains(key, array):
     for element in array:
         if(element == key):
