@@ -28,7 +28,9 @@ def getAcceptedChallengesOfUser():
                         result += challenge['description'] + ";" 
                         result += str(challenge['challengeid']) + ";"
                         result += str(relation['progress']) + ";"
-                        result += str(challenge['outof']) + "\n"
+                        result += str(challenge['outof']) + ";"
+                        result += str(challenge['appliance']) + ";"
+                        result += str(challenge['room']) + "\n"
         challengesFile.close()
         relationsFile.close()
         return result
@@ -65,7 +67,9 @@ def getUnacceptedChallengesOfUser():
                 result += challenge['description'] + ";" 
                 result += str(challenge['challengeid']) + ";"
                 result += str(0) + ";"
-                result += str(challenge['outof']) + "\n"
+                result += str(challenge['outof']) + ";"
+                result += str(challenge['appliance']) + ";"
+                result += str(challenge['room']) + "\n"
         challengesFile.close()
         relationsFile.close()
         return result

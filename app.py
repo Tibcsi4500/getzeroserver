@@ -38,5 +38,5 @@ def getimage():
     return eprel.getimage()
 
 if __name__ == '__main__':
-    server_port = os.environ.get('PORT', '4060')
+    server_port = os.environ.get('PORT', '4050')
     app.run(debug=False, port=server_port, host='0.0.0.0')
